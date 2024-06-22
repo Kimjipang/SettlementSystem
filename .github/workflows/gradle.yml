@@ -47,6 +47,13 @@ jobs:
       run: |
         ./gradlew build
 
+    - name: Stop and remove any existing containers
+      run: |
+        docker-compose down || true
+        docker ps -q --filter "name=settlementsystem_" | grep -q . && docker stop $(docker ps -q --filter "name=settlementsystem_") || true
+        docker ps -a -q --filter "name=settlementsystem_" | grep -q . && docker rm $(docker ps -a -q --filter "name=settlementsystem_") || true
+        docker volume prune -f
+        
     - name: Run Docker Compose
       run: docker-compose up -d --build
 
