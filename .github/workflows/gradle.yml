@@ -1,0 +1,48 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    services:
+      mysql:
+        image: mysql:latest
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_PW }}
+          MYSQL_DATABASE: ${{ secrets.MYSQL_DB }}
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Set up JDK 21
+      uses: actions/setup-java@v2
+      with:
+        java-version: '21'
+
+    - name: Create application.properties
+      run: |
+        cd src/main/resources
+        echo "${{ secrets.PROPERTIES }}" > ./application.properties
+      
+    - name: Build with gradle
+      run: ./gradlew build
+
+    - name: Run Docker Compose
+      run: docker-compose up -d --build
+
+    - name: Wait for services to be up
+      run: sleep 30
+
+    - name: Run tests
+      run: ./gradlew test
