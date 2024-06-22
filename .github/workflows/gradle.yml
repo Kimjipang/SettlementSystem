@@ -37,7 +37,9 @@ jobs:
         echo "${{ secrets.PROPERTIES }}" > ./application.properties
       
     - name: Build with gradle
-      run: ./gradlew build
+      run: |
+        ./gradlew build
+        pwd
 
     - name: Run Docker Compose
       run: docker-compose up -d --build
