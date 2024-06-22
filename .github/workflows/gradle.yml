@@ -35,11 +35,11 @@ jobs:
       run: |
         mkdir -p src/main/resources
         echo "${{ secrets.PROPERTIES }}" > ./application.properties
+        ls -al
       
     - name: Build with gradle
       run: |
         ./gradlew build
-        pwd
 
     - name: Run Docker Compose
       run: docker-compose up -d --build
