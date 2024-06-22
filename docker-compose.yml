@@ -3,8 +3,8 @@ services:
   mysql:
     image: mysql:8.0
     environment:
-      MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_PW }}
-      MYSQL_DATABASE: ${{ secrets.MYSQL_DB }}
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PW}
+      MYSQL_DATABASE: ${MYSQL_DB}
     ports:
       - "3306:3306"
     volumes:
@@ -17,9 +17,9 @@ services:
     depends_on:
       - mysql
     environment:
-      SPRING_DATASOURCE_URL: ${{ DB_URL }}
-      SPRING_DATASOURCE_USERNAME: ${{ DB_USERNAME }}
-      SPRING_DATASOURCE_PASSWORD: ${{ DB_PW }}
+      SPRING_DATASOURCE_URL: ${DB_URL}
+      SPRING_DATASOURCE_USERNAME: ${DB_USERNAME}
+      SPRING_DATASOURCE_PASSWORD: ${DB_PW}
 
 volumes:
   mysql-data:
