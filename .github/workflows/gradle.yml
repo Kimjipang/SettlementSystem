@@ -34,9 +34,10 @@ jobs:
     - name: Create application.properties
       run: |
         pwd
-        ls -al
-        cd src/main
+        cd src
         pwd
+        cd main
+        ls -al
         echo "${{ secrets.PROPERTIES }}" > ./resources/application.properties
       
     - name: Build with gradle
