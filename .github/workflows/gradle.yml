@@ -33,12 +33,8 @@ jobs:
 
     - name: Create application.properties
       run: |
-        pwd
-        cd src
-        pwd
-        cd main
-        ls -al
-        echo "${{ secrets.PROPERTIES }}" > ./resources/application.properties
+        mkdir -p src/main/resources
+        echo "${{ secrets.PROPERTIES }}" > ./application.properties
       
     - name: Build with gradle
       run: ./gradlew build
