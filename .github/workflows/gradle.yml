@@ -11,6 +11,12 @@ on:
 jobs:
   build:
     runs-on: ubuntu-latest
+    env:
+      MYSQL_PW: ${{ secrets.MYSQL_PW }}
+      MYSQL_DB: ${{ secrets.MYSQL_DB }}
+      DB_URL: ${{ secrets.DB_URL }}
+      DB_USERNAME: ${{ secrets.DB_USERNAME }}
+      DB_PW: ${{ secrets.DB_PW }}
 
     services:
       mysql:
@@ -34,7 +40,7 @@ jobs:
     - name: Create application.properties
       run: |
         mkdir -p src/main/resources
-        echo "${{ secrets.PROPERTIES }}" > ./application.properties
+        echo "${{ secrets.PROPERTIES }}" > ./src/main/resources/application.properties
         ls -al
       
     - name: Build with gradle
