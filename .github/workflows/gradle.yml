@@ -1,64 +1,46 @@
-name: CI/CD Pipeline
+
+name: Deploy to AWS EC2
 
 on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
-  build:
+  build-and-deploy:
     runs-on: ubuntu-latest
-    env:
-      MYSQL_PW: ${{ secrets.MYSQL_PW }}
-      MYSQL_DB: ${{ secrets.MYSQL_DB }}
-      DB_URL: ${{ secrets.DB_URL }}
-      DB_USERNAME: ${{ secrets.DB_USERNAME }}
-      DB_PW: ${{ secrets.DB_PW }}
-
-    services:
-      mysql:
-        image: mysql:latest
-        ports:
-          - 3306:3306
-        env:
-          MYSQL_ROOT_PASSWORD: ${{ secrets.MYSQL_PW }}
-          MYSQL_DATABASE: ${{ secrets.MYSQL_DB }}
 
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v2
+      - name: Checkout code
+        uses: actions/checkout@v2
 
-    - name: Set up JDK 21
-      uses: actions/setup-java@v2
-      with:
-        java-version: '21'
-        distribution: 'adopt'
+      - name: Deploy to EC2
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.EC2_HOST }}
+          username: ${{ secrets.EC2_USERNAME }}
+          key: ${{ secrets.SSH_KEY }}
+          script: |
+            # EC2 인스턴스 내에서 spring boot 웹앱 실행하는데 필요한 Java 환경 설정
+            export JAVA_HOME=$(dirname $(dirname $(readlink -f $(which java))))
+            export PATH=$JAVA_HOME/bin:$PATH
 
-    - name: Create application.properties
-      run: |
-        mkdir -p src/main/resources
-        echo "${{ secrets.PROPERTIES }}" > ./src/main/resources/application.properties
-        ls -al
-      
-    - name: Build with gradle
-      run: |
-        ./gradlew build
+            # github 접근 시 인증 절차 생략
+            echo "https://${{ secrets.GH_USERNAME }}:${{ secrets.GH_PAT }}@github.com" > ~/.git-credentials
+            git config --global credential.helper store
+            
+            # application.properties 파일 생성
+            mkdir -p keemjipang/SettlementSystem/src/main/resources
+            echo "${{ secrets.PROPERTIES }}" > ./keemjipang/SettlementSystem/src/main/resources/application.properties
 
-    - name: Stop and remove any existing containers
-      run: |
-        docker-compose down || true
-        docker ps -q --filter "name=settlementsystem_" | grep -q . && docker stop $(docker ps -q --filter "name=settlementsystem_") || true
-        docker ps -a -q --filter "name=settlementsystem_" | grep -q . && docker rm $(docker ps -a -q --filter "name=settlementsystem_") || true
-        docker volume prune -f
-        
-    - name: Run Docker Compose
-      run: docker-compose up -d --build
+            # 변경 사항 pull 및 아티팩트(.jar) 생성
+            cd keemjipang/SettlementSystem
+            git pull origin  
+            ./gradlew build
 
-    - name: Wait for services to be up
-      run: sleep 30
-
-    - name: Run tests
-      run: ./gradlew test
+            # Docker 이미지 빌드 & 컨테이너 생성 및 실행
+            TAG=$(date +%Y%m%d%H%M%S)
+            docker build --build-arg KEYSTORE_FILE=src/main/resources/keystore.p12 -t settlement-image:$TAG .
+            docker stop settlement-container || true
+            docker rm settlement-container || true
+            docker run --name settlement-container -d -p 443:8443 settlement-image:$TAG
