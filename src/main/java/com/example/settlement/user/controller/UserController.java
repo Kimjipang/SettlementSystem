@@ -1,15 +1,21 @@
 package com.example.settlement.user.controller;
 
-import com.example.settlement.user.dto.UserResponseDto;
+import com.example.settlement.user.dto.request.AuthenticationRequest;
+import com.example.settlement.user.dto.request.UserRequestDto;
+import com.example.settlement.user.dto.response.AuthenticationResponse;
+import com.example.settlement.user.dto.response.UserResponseDto;
 import com.example.settlement.user.entity.User;
+import com.example.settlement.user.service.CustomUserDetailsService;
 import com.example.settlement.user.service.UserService;
+import com.example.settlement.util.JwtUtil;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.BadCredentialsException;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +26,26 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final AuthenticationManager authenticationManager;
+    private final JwtUtil jwtUtil;
+    private final CustomUserDetailsService userDetailsService;
 
+
+    @PostMapping("/login")
+    public ResponseEntity<?> createAuthenticationToken(@RequestBody AuthenticationRequest authenticationRequest) throws Exception {
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(authenticationRequest.getEmail(), authenticationRequest.getPassword())
+            );
+        } catch (BadCredentialsException e) {
+            throw new Exception("Incorrect email or password", e);
+        }
+
+        final UserDetails userDetails = userDetailsService.loadUserByUsername(authenticationRequest.getEmail());
+        final String jwt = jwtUtil.generateToken(userDetails);
+
+        return ResponseEntity.ok(new AuthenticationResponse(jwt));
+    }
 
     @GetMapping
     public ResponseEntity<List<UserResponseDto>> getUserList() {
@@ -34,10 +59,31 @@ public class UserController {
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<UserResponseDto> getUser(@PathVariable long id) {
+    public ResponseEntity<UserResponseDto> getUser(@PathVariable Long id) {
         User user = userService.getUser(id);
         UserResponseDto userResponseDto = new UserResponseDto(user);
         ResponseEntity<UserResponseDto> response = new ResponseEntity<>(userResponseDto, HttpStatus.OK);
         return response;
+    }
+
+    @PostMapping
+    public ResponseEntity<UserResponseDto> registerUser(@RequestBody UserRequestDto userRequestDto) {
+        User user = userService.registerUser(userRequestDto);
+        UserResponseDto userResponseDto = new UserResponseDto(user);
+        ResponseEntity<UserResponseDto> response = new ResponseEntity<>(userResponseDto, HttpStatus.CREATED);
+        return response;
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<UserResponseDto> updateUser(@RequestBody UserRequestDto userRequestDto, @PathVariable Long id) {
+        User updatedUser = userService.updateUser(userRequestDto, id);
+        UserResponseDto userResponseDto = new UserResponseDto(updatedUser);
+        ResponseEntity<UserResponseDto> response = new ResponseEntity<>(userResponseDto, HttpStatus.OK);
+        return response;
+    }
+
+    @DeleteMapping("/{id}")
+    public void deleteUser(@PathVariable Long id) {
+        userService.deleteUser(id);
     }
 }
