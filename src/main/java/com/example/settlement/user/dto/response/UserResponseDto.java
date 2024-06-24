@@ -1,4 +1,4 @@
-package com.example.settlement.user.dto;
+package com.example.settlement.user.dto.response;
 
 import com.example.settlement.user.entity.User;
 import lombok.Getter;
