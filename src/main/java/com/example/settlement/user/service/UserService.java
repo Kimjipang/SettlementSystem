@@ -34,7 +34,8 @@ public class UserService {
         User user = new User(
                 userRequestDto.getUsername(),
                 userRequestDto.getEmail(),
-                encodedPassword
+                encodedPassword,
+                userRequestDto.getRole()
                 );
         return userRepository.save(user);
     }
@@ -47,7 +48,8 @@ public class UserService {
         user.updateUser(
                 userRequestDto.getUsername(),
                 userRequestDto.getEmail(),
-                encodedPassword
+                encodedPassword,
+                userRequestDto.getRole()
         );
         return userRepository.save(user);
     }
