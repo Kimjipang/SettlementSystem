@@ -7,5 +7,5 @@ import lombok.Getter;
 public class VideoRequestDto {
     private String title;
     private int playing_time;
-    private Long userId;
+    private Long user_id;
 }
