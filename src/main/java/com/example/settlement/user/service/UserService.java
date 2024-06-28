@@ -3,6 +3,7 @@ package com.example.settlement.user.service;
 import com.example.settlement.user.dto.request.UserRequestDto;
 import com.example.settlement.user.entity.User;
 import com.example.settlement.user.repository.UserRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,6 +30,7 @@ public class UserService {
         return user;
     }
 
+    @Transactional
     public User registerUser(UserRequestDto userRequestDto) {
         String encodedPassword = passwordEncoder.encode(userRequestDto.getPassword());
         User user = new User(
@@ -40,6 +42,7 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    @Transactional
     public User updateUser(UserRequestDto userRequestDto, Long id) {
         String encodedPassword = passwordEncoder.encode(userRequestDto.getPassword());
         User user = userRepository.findById(id).orElseThrow(
