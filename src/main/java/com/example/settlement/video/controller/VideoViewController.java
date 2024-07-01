@@ -23,8 +23,7 @@ public class VideoViewController {
         1. jwt 토큰으로 유저 검증
         2. 요청한 사람의 user_id와 종료하고자 하는 video_id를 외래키로 가지는 VideoView 객체가 있으면 수정을 한다. 없으면, 새로 생성을 한다.
         */
-        VideoView videoView = videoViewService.createVideoView(videoViewRequestDto);
-        VideoViewResponseDto videoViewResponseDto = new VideoViewResponseDto(videoView);
+        VideoViewResponseDto videoViewResponseDto = videoViewService.createVideoView(videoViewRequestDto);
         ResponseEntity<VideoViewResponseDto> reponse = new ResponseEntity<>(videoViewResponseDto, HttpStatus.CREATED);
         return reponse;
     }

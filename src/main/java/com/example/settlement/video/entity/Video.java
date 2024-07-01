@@ -1,5 +1,6 @@
 package com.example.settlement.video.entity;
 
+import com.example.settlement.advertisement.entity.VideoAd;
 import com.example.settlement.common.BaseTimeEntity;
 import com.example.settlement.user.entity.User;
 import jakarta.persistence.*;
@@ -41,6 +42,9 @@ public class Video extends BaseTimeEntity {
 
     @OneToMany(mappedBy = "video")
     private List<VideoStatistics> videoStatisticsList = new ArrayList<>();
+
+    @OneToMany(mappedBy = "video")
+    private List<VideoAd> videoAdList = new ArrayList<>();
 
     public Video(String title, int playing_time, User user) {
         this.title = title;

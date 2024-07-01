@@ -1,5 +1,8 @@
 package com.example.settlement.video.service;
 
+import com.example.settlement.advertisement.dto.response.VideoAdResponseDto;
+import com.example.settlement.advertisement.entity.VideoAd;
+import com.example.settlement.advertisement.repository.VideoAdRepository;
 import com.example.settlement.common.UserAuth;
 import com.example.settlement.user.entity.User;
 import com.example.settlement.user.repository.UserRepository;
@@ -13,6 +16,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -24,6 +28,7 @@ public class VideoService {
     private final UserAuth userAuth;
     private final UserRepository userRepository;
     private final VideoViewRepository videoViewRepository;
+    private final VideoAdRepository videoAdRepository;
 
     @Transactional
     public Video createVideo(VideoRequestDto videoRequestDto) {
@@ -58,9 +63,7 @@ public class VideoService {
     }
 
     public VideoResponseDto getVideo(Long id) {
-        /*
-        1. Video 단일 객체를 조회하면,
-        */
+
         String email = userAuth.getAuthenticatedUserEmail();
         User user = userRepository.findByEmail(email).orElseThrow(
                 () -> new RuntimeException("User not found with this email")
@@ -71,12 +74,10 @@ public class VideoService {
         );
 
         VideoView videoView = videoViewRepository.findByVideoAndUser(video, user).orElse(null);
-
         int savepoint = videoView!= null ? videoView.getSave_point() : 0;
 
         return new VideoResponseDto(video, savepoint);
     }
-
     @Transactional
     public Video updateVideo(Long id, VideoRequestDto videoRequestDto) {
         /*
@@ -118,4 +119,5 @@ public class VideoService {
         );
         videoRepository.delete(video);
     }
+
 }
