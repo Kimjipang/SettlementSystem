@@ -16,7 +16,7 @@ public class VideoAdResponseDto {
     public VideoAdResponseDto(VideoAd videoAd) {
         this.video_ad_id = videoAd.getId();
         this.ad_position = videoAd.getAd_position();
-        this.ad_count = videoAd.getAd_count();
+        this.ad_count = videoAd.getView_count();
         this.video_id = videoAd.getVideo().getId();
         this.ad_id = videoAd.getAdvertisement().getId();
     }
@@ -24,7 +24,7 @@ public class VideoAdResponseDto {
     public VideoAdResponseDto(VideoAd videoAd, String ad_title) {
         this.video_ad_id = videoAd.getId();
         this.ad_position = videoAd.getAd_position();
-        this.ad_count = videoAd.getAd_count();
+        this.ad_count = videoAd.getView_count();
         this.video_id = videoAd.getVideo().getId();
         this.ad_id = videoAd.getAdvertisement().getId();
         this.ad_title = ad_title;

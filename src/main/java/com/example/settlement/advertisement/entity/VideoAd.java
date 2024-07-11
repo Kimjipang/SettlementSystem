@@ -7,6 +7,9 @@ import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -14,14 +17,14 @@ public class VideoAd extends BaseTimeEntity {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "videoAd_id")
+    @Column(name = "video_ad_id")
     private Long id;
 
     @Column(nullable = false)
     private int ad_position;
 
     @Column(nullable = false)
-    private int ad_count;
+    private int view_count;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "ad_id")
@@ -31,15 +34,18 @@ public class VideoAd extends BaseTimeEntity {
     @JoinColumn(name = "video_id")
     private Video video;
 
+    @OneToMany(mappedBy = "videoAd")
+    private List<AdView> adViewList = new ArrayList<>();
 
-    public VideoAd(int ad_position, int ad_count, Video video, Advertisement advertisement) {
+
+    public VideoAd(int ad_position, int view_count, Video video, Advertisement advertisement) {
         this.ad_position = ad_position;
-        this.ad_count = ad_count;
+        this.view_count = view_count;
         this.video = video;
         this.advertisement = advertisement;
     }
 
-    public void videoAdCount() {
-        this.ad_count++;
+    public void videoAdCount(int view_count) {
+        this.view_count = view_count + 1;
     }
 }
