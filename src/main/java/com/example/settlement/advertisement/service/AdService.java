@@ -18,7 +18,6 @@ public class AdService {
 
     private final AdRepository adRepository;
 
-
     @Transactional
     public AdResponseDto createAd(AdRequestDto adRequestDto) {
         Advertisement ad = new Advertisement(adRequestDto.getTitle());
