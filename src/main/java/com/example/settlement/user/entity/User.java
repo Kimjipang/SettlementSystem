@@ -1,7 +1,6 @@
 package com.example.settlement.user.entity;
 
 
-import com.example.settlement.common.BaseEntity;
 import com.example.settlement.common.BaseTimeEntity;
 import com.example.settlement.video.entity.Video;
 import jakarta.persistence.*;
