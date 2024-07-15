@@ -1,7 +1,7 @@
 package com.example.settlement.common;
 
 import com.example.settlement.user.entity.User;
-import com.example.settlement.user.repository.UserRepository;
+import com.example.settlement.user.repository.read.UserReadRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -12,7 +12,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class UserAuth {
 
-    private final UserRepository userRepository;
+    private final UserReadRepository userReadRepository;
 
     public String getAuthenticatedUserEmail() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -22,7 +22,7 @@ public class UserAuth {
     }
 
     public User getUserByIdAndValidate(Long userId, String email) {
-        User user = userRepository.findById(userId).orElseThrow(
+        User user = userReadRepository.findById(userId).orElseThrow(
                 () -> new RuntimeException("User not found")
         );
 

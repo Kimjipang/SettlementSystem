@@ -5,40 +5,42 @@ import com.example.settlement.advertisement.dto.request.VideoAdRequestDto;
 import com.example.settlement.advertisement.dto.response.VideoAdResponseDto;
 import com.example.settlement.advertisement.entity.Advertisement;
 import com.example.settlement.advertisement.entity.VideoAd;
-import com.example.settlement.advertisement.repository.AdRepository;
-import com.example.settlement.advertisement.repository.VideoAdRepository;
+import com.example.settlement.advertisement.repository.read.AdReadRepository;
+import com.example.settlement.advertisement.repository.read.VideoAdReadRepository;
+import com.example.settlement.advertisement.repository.write.VideoAdWriteRepository;
 import com.example.settlement.common.UserAuth;
 import com.example.settlement.user.entity.User;
-import com.example.settlement.user.repository.UserRepository;
+import com.example.settlement.user.repository.read.UserReadRepository;
 import com.example.settlement.video.entity.Video;
-import com.example.settlement.video.repository.VideoRepository;
-import jakarta.transaction.Transactional;
+import com.example.settlement.video.repository.read.VideoReadRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class VideoAdService {
 
-    private final VideoAdRepository videoAdRepository;
-    private final VideoRepository videoRepository;
-    private final AdRepository adRepository;
+    private final VideoAdReadRepository videoAdReadRepository;
+    private final VideoAdWriteRepository videoAdWriteRepository;
+    private final VideoReadRepository videoReadRepository;
+    private final AdReadRepository adReadRepository;
     private final UserAuth userAuth;
-    private final UserRepository userRepository;
+    private final UserReadRepository userReadRepository;
 
 
-    @Transactional
     public VideoAdResponseDto createVideoAd(VideoAdRequestDto videoAdRequestDto) {
         String email = userAuth.getAuthenticatedUserEmail();
 
-        Video video = videoRepository.findById(videoAdRequestDto.getVideo_id()).orElseThrow(
+        Video video = videoReadRepository.findById(videoAdRequestDto.getVideo_id()).orElseThrow(
                 () -> new RuntimeException("광고를 넣을 동영상이 존재하지 않습니다.")
         );
 
-        User user = userRepository.findByEmail(email).orElseThrow(
+        User user = userReadRepository.findByEmail(email).orElseThrow(
                 () -> new RuntimeException("해당 유저가 존재하지 않습니다.")
         );
 
@@ -46,7 +48,7 @@ public class VideoAdService {
             throw new RuntimeException("동영상에 대한 권한이 없는 유저입니다.");
         }
 
-        Advertisement advertisement = adRepository.findById(videoAdRequestDto.getAd_id()).orElseThrow(
+        Advertisement advertisement = adReadRepository.findById(videoAdRequestDto.getAd_id()).orElseThrow(
                 () -> new RuntimeException("추가할 광고가 없습니다.")
         );
 
@@ -59,11 +61,11 @@ public class VideoAdService {
                 advertisement
                 );
 
-        return new VideoAdResponseDto(videoAdRepository.save(videoAd), advertisement.getTitle());
+        return new VideoAdResponseDto(videoAdWriteRepository.save(videoAd), advertisement.getTitle());
     }
 
     public List<VideoAdResponseDto> getVideoAdList() {
-        List<VideoAd> videoAdList = videoAdRepository.findAll();
+        List<VideoAd> videoAdList = videoAdReadRepository.findAll();
         List<VideoAdResponseDto> videoAdResponseDtoList = new ArrayList<>();
 
         for (VideoAd videoAd : videoAdList) {

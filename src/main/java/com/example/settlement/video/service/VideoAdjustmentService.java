@@ -4,12 +4,13 @@ import com.example.settlement.video.dto.request.VideoAdjustmentRequestDto;
 import com.example.settlement.video.dto.response.VideoAdjustmentResponseDto;
 import com.example.settlement.video.entity.Video;
 import com.example.settlement.video.entity.VideoAdjustment;
-import com.example.settlement.video.entity.VideoView;
-import com.example.settlement.video.repository.VideoRepository;
-import com.example.settlement.video.repository.VideoAdjustmentRepository;
-import com.example.settlement.video.repository.VideoViewRepository;
+import com.example.settlement.video.repository.read.VideoReadRepository;
+import com.example.settlement.video.repository.read.VideoAdjustmentReadRepository;
+import com.example.settlement.video.repository.read.VideoViewReadRepository;
+import com.example.settlement.video.repository.write.VideoAdjustmentWriteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -17,26 +18,28 @@ import java.time.LocalDate;
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class VideoAdjustmentService {
 
-    private final VideoAdjustmentRepository videoAdjustmentRepository;
-    private final VideoViewRepository videoViewRepository;
+    private final VideoAdjustmentReadRepository videoAdjustmentReadRepository;
+    private final VideoAdjustmentWriteRepository videoAdjustmentWriteRepository;
+    private final VideoViewReadRepository videoViewReadRepository;
 
     private static final LocalDate yesterday = LocalDate.now().minusDays(1);
     private static final LocalDate today = LocalDate.now();
 
-    private final VideoRepository videoRepository;
+    private final VideoReadRepository videoReadRepository;
 
     public VideoAdjustmentResponseDto calculateDailyVideo(VideoAdjustmentRequestDto videoAdjustmentRequestDto) {
 
-        Video video = videoRepository.findById(videoAdjustmentRequestDto.getVideo_id()).orElseThrow(
+        Video video = videoReadRepository.findById(videoAdjustmentRequestDto.getVideo_id()).orElseThrow(
                 () -> new RuntimeException("찾는 동영상이 존재하지 않습니다.")
         );
 
 //        List<VideoView> videoViewList = videoViewRepository.findAllByVideoIdAndDate(video.getId(), today);
 
         int video_accumulate_count = video.getView_count(); // 누적 조회수
-        int video_today_count = videoViewRepository.countByVideoIdAndDateAndDifferentUser(video.getId(), yesterday); // 당일 조회수
+        int video_today_count = videoViewReadRepository.countByVideoIdAndDateAndDifferentUser(video.getId(), yesterday); // 당일 조회수
 
         BigDecimal video_daily_amount = calculateDailyAmount(
                 video_accumulate_count,
@@ -57,7 +60,7 @@ public class VideoAdjustmentService {
         System.out.println("동영상 당일 조회수는 " + video_today_count);
         System.out.println("동영상의 당일 조회수 정산 금액은 " + video_daily_amount);
 
-        VideoAdjustment saved = videoAdjustmentRepository.save(videoAdjustment);
+        VideoAdjustment saved = videoAdjustmentWriteRepository.save(videoAdjustment);
 
         return new VideoAdjustmentResponseDto(saved);
     }

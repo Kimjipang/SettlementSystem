@@ -1,19 +1,19 @@
-package com.example.settlement.video.repository;
+package com.example.settlement.video.repository.read;
 
 
 import com.example.settlement.video.entity.Video;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface VideoRepository extends JpaRepository<Video, Long> {
+@Transactional(readOnly = true)
+public interface VideoReadRepository extends JpaRepository<Video, Long> {
 
-    @Query("SELECT v.id FROM Video v")
-    List<Long> findAllIds();
     List<Video> findAllByUserId(Long id);
     Optional<Video> findByIdAndUserId(Long id, Long userId);
 }
+

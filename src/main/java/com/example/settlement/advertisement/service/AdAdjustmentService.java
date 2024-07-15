@@ -5,40 +5,44 @@ import com.example.settlement.advertisement.dto.request.AdAdjustmentRequestDto;
 import com.example.settlement.advertisement.dto.response.AdAdjustmentResponseDto;
 import com.example.settlement.advertisement.entity.AdAdjustment;
 import com.example.settlement.advertisement.entity.VideoAd;
-import com.example.settlement.advertisement.repository.AdAdjustmentRepository;
-import com.example.settlement.advertisement.repository.VideoAdRepository;
+import com.example.settlement.advertisement.repository.read.AdAdjustmentReadRepository;
+import com.example.settlement.advertisement.repository.read.VideoAdReadRepository;
+import com.example.settlement.advertisement.repository.write.AdAdjustmentWriteRepository;
 import com.example.settlement.common.UserAuth;
 import com.example.settlement.user.entity.User;
-import com.example.settlement.user.repository.UserRepository;
+import com.example.settlement.user.repository.read.UserReadRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.time.LocalDate;
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class AdAdjustmentService {
 
-    private final AdAdjustmentRepository adAdjustmentRepository;
-    private final VideoAdRepository videoAdRepository;
+    private final AdAdjustmentReadRepository adAdjustmentReadRepository;
+    private final AdAdjustmentWriteRepository adAdjustmentWriteRepository;
+    private final VideoAdReadRepository videoAdReadRepository;
     private final UserAuth userAuth;
-    private final UserRepository userRepository;
+    private final UserReadRepository userReadRepository;
 
     public AdAdjustmentResponseDto calculateDailyAd(AdAdjustmentRequestDto adAdjustmentRequestDto) {
         String email = userAuth.getAuthenticatedUserEmail();
 
-        User user = userRepository.findByEmail(email).orElseThrow(
+        User user = userReadRepository.findByEmail(email).orElseThrow(
                 () -> new RuntimeException("해당 유저가 존재하지 않습니다.")
         );
 
-        VideoAd videoAd = videoAdRepository.findById(adAdjustmentRequestDto.getVideoAd_id()).orElseThrow(
+        VideoAd videoAd = videoAdReadRepository.findById(adAdjustmentRequestDto.getVideoAd_id()).orElseThrow(
                 () -> new RuntimeException("정산할 광고가 존재하지 않습니다.")
         );
 
         int ad_accumulate_count = videoAd.getView_count();
-        int ad_today_count = adAdjustmentRepository.countTodayAdView(videoAd.getId(), user.getId(), LocalDate.now());
+        int ad_today_count = adAdjustmentReadRepository.countTodayAdView(videoAd.getId(), user.getId(), LocalDate.now());
 
 
         BigDecimal ad_daily_amount = calculateDailyAmount(
@@ -54,7 +58,7 @@ public class AdAdjustmentService {
         System.out.println("당일 광고 정산 금액은 " + ad_daily_amount);
 
         AdAdjustment adAdjustment = new AdAdjustment(LocalDate.now(), ad_daily_amount, videoAd);
-        adAdjustmentRepository.save(adAdjustment);
+        adAdjustmentWriteRepository.save(adAdjustment);
 
         return new AdAdjustmentResponseDto(adAdjustment);
 

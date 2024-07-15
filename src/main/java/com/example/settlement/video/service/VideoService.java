@@ -1,33 +1,34 @@
 package com.example.settlement.video.service;
 
-import com.example.settlement.advertisement.repository.VideoAdRepository;
 import com.example.settlement.common.UserAuth;
 import com.example.settlement.user.entity.User;
-import com.example.settlement.user.repository.UserRepository;
+import com.example.settlement.user.repository.read.UserReadRepository;
 import com.example.settlement.video.dto.request.VideoRequestDto;
 import com.example.settlement.video.dto.response.VideoResponseDto;
 import com.example.settlement.video.entity.Video;
-import com.example.settlement.video.entity.VideoView;
-import com.example.settlement.video.repository.VideoRepository;
-import com.example.settlement.video.repository.VideoViewRepository;
-import jakarta.transaction.Transactional;
+import com.example.settlement.video.repository.read.VideoReadRepository;
+import com.example.settlement.video.repository.read.VideoViewReadRepository;
+import com.example.settlement.video.repository.write.VideoWriteRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
 
 
 @Service
+@Transactional
 @RequiredArgsConstructor
 public class VideoService {
 
-    private final VideoRepository videoRepository;
+    private final VideoReadRepository videoReadRepository;
+    private final VideoWriteRepository videoWriteRepository;
     private final UserAuth userAuth;
-    private final UserRepository userRepository;
-    private final VideoViewRepository videoViewRepository;
+    private final UserReadRepository userReadRepository;
+    private final VideoViewReadRepository videoViewReadRepository;
 
-    @Transactional
+
     public VideoResponseDto createVideo(VideoRequestDto videoRequestDto) {
 
         String email = userAuth.getAuthenticatedUserEmail();
@@ -40,7 +41,7 @@ public class VideoService {
                 0,
                 user
         );
-        videoRepository.save(video);
+        videoWriteRepository.save(video);
 
         return new VideoResponseDto(video);
     }
@@ -48,11 +49,11 @@ public class VideoService {
     public List<VideoResponseDto> getVideoList() {
 
         String email = userAuth.getAuthenticatedUserEmail();
-        User user = userRepository.findByEmail(email).orElseThrow(
+        User user = userReadRepository.findByEmail(email).orElseThrow(
                 () -> new RuntimeException("요청한 유저와 등록된 유저가 일치하지 않습니다.")
         );
 
-        List<Video> videoList = videoRepository.findAllByUserId(user.getId());
+        List<Video> videoList = videoReadRepository.findAllByUserId(user.getId());
 
         List<VideoResponseDto> videoResponseDtoList = new ArrayList<>();
         for (Video video : videoList) {
@@ -65,27 +66,26 @@ public class VideoService {
     public VideoResponseDto getVideo(Long id) {
 
         String email = userAuth.getAuthenticatedUserEmail();
-        User user = userRepository.findByEmail(email).orElseThrow(
+        User user = userReadRepository.findByEmail(email).orElseThrow(
                 () -> new RuntimeException("User not found with this email")
         );
 
-        Video video = videoRepository.findById(id).orElseThrow(
+        Video video = videoReadRepository.findById(id).orElseThrow(
                 () -> new RuntimeException("Video not found")
         );
 
-        Integer view_point = videoViewRepository.findLatestSavePoint(user.getId(), video.getId()).orElse(null);
+        Integer view_point = videoViewReadRepository.findLatestSavePoint(user.getId(), video.getId()).orElse(null);
 
         int savepoint = view_point != null ? view_point : 0;
 
         return new VideoResponseDto(video, savepoint);
     }
 
-    @Transactional
     public VideoResponseDto updateVideo(Long id, VideoRequestDto videoRequestDto) {
 
         String email = userAuth.getAuthenticatedUserEmail();
         User user = userAuth.getUserByIdAndValidate(videoRequestDto.getUser_id(), email);
-        Video video = videoRepository.findById(id).orElseThrow(
+        Video video = videoReadRepository.findById(id).orElseThrow(
                 () -> new RuntimeException("찾고자 하는 동영상이 존재하지 않습니다.")
         );
 
@@ -94,7 +94,7 @@ public class VideoService {
                 videoRequestDto.getPlaying_time() != video.getPlaying_time() ? videoRequestDto.getPlaying_time() : video.getPlaying_time(),
                 user
         );
-        videoRepository.save(video);
+        videoWriteRepository.save(video);
 
         return new VideoResponseDto(video);
     }
@@ -103,14 +103,14 @@ public class VideoService {
 
         String email = userAuth.getAuthenticatedUserEmail();
 
-        User user = userRepository.findByEmail(email).orElseThrow(
+        User user = userReadRepository.findByEmail(email).orElseThrow(
                 () -> new RuntimeException("User not found with this email")
         );
 
-        Video video = videoRepository.findByIdAndUserId(id, user.getId()).orElseThrow(
+        Video video = videoReadRepository.findByIdAndUserId(id, user.getId()).orElseThrow(
                 () -> new RuntimeException("삭제하고자 하는 영상이 존재하지 않습니다.")
         );
 
-        videoRepository.delete(video);
+        videoWriteRepository.delete(video);
     }
 }

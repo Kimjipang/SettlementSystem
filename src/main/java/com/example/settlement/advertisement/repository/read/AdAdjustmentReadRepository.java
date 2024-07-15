@@ -1,13 +1,16 @@
-package com.example.settlement.advertisement.repository;
+package com.example.settlement.advertisement.repository.read;
 
 import com.example.settlement.advertisement.entity.AdAdjustment;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 
-public interface AdAdjustmentRepository extends JpaRepository<AdAdjustment, Long> {
+
+@Transactional(readOnly = true)
+public interface AdAdjustmentReadRepository extends JpaRepository<AdAdjustment, Long> {
 
     @Query(value = "SELECT COUNT(*) FROM ad_view av " +
             "JOIN video_ad va ON av.video_ad_id = va.video_ad_id " +
