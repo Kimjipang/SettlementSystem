@@ -12,6 +12,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "advertisement")
 public class Advertisement extends BaseTimeEntity {
 
     @Id

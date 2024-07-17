@@ -16,6 +16,7 @@ import java.util.List;
 @Getter
 @EntityListeners(AuditingEntityListener.class)
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "video")
 public class Video extends BaseTimeEntity {
 
     @Id

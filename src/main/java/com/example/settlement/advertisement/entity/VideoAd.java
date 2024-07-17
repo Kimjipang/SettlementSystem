@@ -13,6 +13,7 @@ import java.util.List;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "video_ad")
 public class VideoAd extends BaseTimeEntity {
 
     @Id

@@ -11,6 +11,7 @@ import java.time.LocalDate;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "video_statistics")
 public class VideoStatistics extends BaseCreateTimeEntity {
 
     @Id

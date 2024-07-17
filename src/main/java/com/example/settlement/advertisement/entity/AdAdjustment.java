@@ -13,6 +13,7 @@ import java.time.LocalDate;
 @Entity
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "ad_adjustment")
 public class AdAdjustment extends BaseCreateTimeEntity {
 
     @Id
