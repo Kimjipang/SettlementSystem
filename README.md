@@ -1,30 +1,154 @@
-# 🧮 정산 시스템 README.md
+# 정산 프로젝트
 
-## 📌 프로젝트 목표
+## 💡 프로젝트 소개
 
-### 🍉 유튜브의 정산 페이지 개발
+#### 🧑‍💻 2024.06.19 ~ 2024.07.16
 
-- 판매자에게 유용한 기능들(정산, 통계 등)을 제공한다.
-- 정산 시에는 `영상별 조회수`, `재생 시간`, `광고 영상의 종류`, `광고 재생 횟수`, `판매자의 등급`을 바탕으로 이뤄진다.
-<br/>
+- Spring Batch를 활용한 대용량의 영상 & 광고 시청기록 데이터 통계 및 정산 작업
+- DB의 부하 분산 및 가용성을 위한 CQRS 패턴 & Master/Slave DB 구조
 
-> **💡 요구 사항**
+## 📚 기술 스택
+<img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=for-the-badge&logo=Spring Boot&logoColor=white">
+<img src="https://img.shields.io/badge/Spring Security-6DB33F?style=for-the-badge&logo=Spring Security&logoColor=white">
+<img src="https://img.shields.io/badge/Gradle-02303A?style=for-the-badge&logo=Gradle&logoColor=white">
+<img src="https://img.shields.io/badge/MySQL-4479A1?style=for-the-badge&logo=MySQL&logoColor=white">
+<img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=Docker&logoColor=white">
+<img src="https://img.shields.io/badge/Github Actions-2088FF?style=for-the-badge&logo=Github Actions&logoColor=white">
+<img src="https://img.shields.io/badge/AWS EC2-FF9900?style=for-the-badge&logo=Spring Boot&logoColor=white">
+<img src="https://img.shields.io/badge/AWS Route 53-8C4FFF?style=for-the-badge&logo=Spring Boot&logoColor=white">
 
-1. 회원가입 기능
-    1. 소셜 로그인 or JWT 로그인
-    2. 로그아웃
-    3. 권한 설정 - 사용자 & 판매자 계정
-2. 스트리밍 서비스
-    1. 동영상을 재생하는 API 개발
-        1. 재생 시 기존에 조회했던 시점에서 재생(최초 조회면 처음부터 재생)
-        2. 재생 중단 시 현재 시점 저장
-    2. 광고 시청
-        1. 등록된 동영상에는 1개 이상의 광고 영상 등록 가능
-        2. 광고 영상이 등록된 시점(동영상의 특정 시간에 광고 영상을 등록)까지 영상이 재생 → 해당 광고 영상의 시청 횟수가 카운트 되어야 함. ❗️광고 스킵 불가❗️
-3. 동영상 관리
-    1. 현재 재생 가능한 동영상을 관리하는 기능
-        1. API로 제공하지 않고 DB Query 통해 관리. 기능과 관련된 DB 테이블 설계만 진행
-4. 어뷰징 방지
-    1. 동영상 게시자가 동영상 시청하는 경우에는 조회수, 광고, 시청횟수에 카운트 X
-    2. 30초 이내에 동일한 Source(IP, 인증키)로부터의 접속은 어뷰징으로 간주
-        1. 조회수, 시청횟수에 카운트 X
+<p/>
+
+#### 🧑‍💻 기술적 의사결정 [문서](https://available-snow-c33.notion.site/262cb2b4de4e4b269c862f2a5a17a347)
+
+- Spring Batch
+- MySQL
+- Docker
+- Github Actions
+
+## ⚙️ 아키텍처
+
+> 이미지 추가 예정
+
+
+#### 🧑‍💻 파일 구조도
+
+```
+📦settlement
+ ┣ 📂advertisement
+ ┃ ┣ 📂controller
+ ┃ ┃ ┣ 📜AdAdjustmentController.java
+ ┃ ┃ ┣ 📜AdController.java
+ ┃ ┃ ┣ 📜AdViewController.java
+ ┃ ┃ ┗ 📜VideoAdController.java
+ ┃ ┣ 📂dto
+ ┃ ┃ ┣ 📂request
+ ┃ ┃ ┃ ┣ 📜AdAdjustmentRequestDto.java
+ ┃ ┃ ┃ ┣ 📜AdRequestDto.java
+ ┃ ┃ ┃ ┣ 📜AdViewRequestDto.java
+ ┃ ┃ ┃ ┗ 📜VideoAdRequestDto.java
+ ┃ ┃ ┗ 📂response
+ ┃ ┃ ┃ ┣ 📜AdAdjustmentResponseDto.java
+ ┃ ┃ ┃ ┣ 📜AdResponseDto.java
+ ┃ ┃ ┃ ┣ 📜AdViewResponseDto.java
+ ┃ ┃ ┃ ┗ 📜VideoAdResponseDto.java
+ ┃ ┣ 📂entity
+ ┃ ┃ ┣ 📜AdAdjustment.java
+ ┃ ┃ ┣ 📜AdStatistics.java
+ ┃ ┃ ┣ 📜AdView.java
+ ┃ ┃ ┣ 📜Advertisement.java
+ ┃ ┃ ┗ 📜VideoAd.java
+ ┃ ┣ 📂repository
+ ┃ ┃ ┣ 📂read
+ ┃ ┃ ┃ ┣ 📜AdAdjustmentReadRepository.java
+ ┃ ┃ ┃ ┣ 📜AdReadRepository.java
+ ┃ ┃ ┃ ┣ 📜AdViewReadRepository.java
+ ┃ ┃ ┃ ┗ 📜VideoAdReadRepository.java
+ ┃ ┃ ┗ 📂write
+ ┃ ┃ ┃ ┣ 📜AdAdjustmentWriteRepository.java
+ ┃ ┃ ┃ ┣ 📜AdViewWriteRepository.java
+ ┃ ┃ ┃ ┣ 📜AdWriteRepository.java
+ ┃ ┃ ┃ ┗ 📜VideoAdWriteRepository.java
+ ┃ ┗ 📂service
+ ┃ ┃ ┣ 📜AdAdjustmentService.java
+ ┃ ┃ ┣ 📜AdService.java
+ ┃ ┃ ┣ 📜AdViewService.java
+ ┃ ┃ ┗ 📜VideoAdService.java
+ ┣ 📂common
+ ┃ ┣ 📜BaseCreateTimeEntity.java
+ ┃ ┣ 📜BaseEntity.java
+ ┃ ┣ 📜BaseTimeEntity.java
+ ┃ ┗ 📜UserAuth.java
+ ┣ 📂config
+ ┃ ┣ 📜DataSourceConfig.java
+ ┃ ┣ 📜ReadEntityManagerConfig.java
+ ┃ ┣ 📜SecurityConfig.java
+ ┃ ┗ 📜WriteEntityManagerConfig.java
+ ┣ 📂security
+ ┃ ┗ 📜JwtRequestFilter.java
+ ┣ 📂user
+ ┃ ┣ 📂controller
+ ┃ ┃ ┣ 📜AuthController.java
+ ┃ ┃ ┗ 📜UserController.java
+ ┃ ┣ 📂dto
+ ┃ ┃ ┣ 📂request
+ ┃ ┃ ┃ ┣ 📜AuthenticationRequest.java
+ ┃ ┃ ┃ ┗ 📜UserRequestDto.java
+ ┃ ┃ ┗ 📂response
+ ┃ ┃ ┃ ┣ 📜AuthenticationResponse.java
+ ┃ ┃ ┃ ┗ 📜UserResponseDto.java
+ ┃ ┣ 📂entity
+ ┃ ┃ ┣ 📜Role.java
+ ┃ ┃ ┗ 📜User.java
+ ┃ ┣ 📂repository
+ ┃ ┃ ┣ 📂read
+ ┃ ┃ ┃ ┗ 📜UserReadRepository.java
+ ┃ ┃ ┗ 📂write
+ ┃ ┃ ┃ ┗ 📜UserWriteRepository.java
+ ┃ ┗ 📂service
+ ┃ ┃ ┣ 📜CustomUserDetailsService.java
+ ┃ ┃ ┗ 📜UserService.java
+ ┣ 📂util
+ ┃ ┗ 📜JwtUtil.java
+ ┣ 📂video
+ ┃ ┣ 📂controller
+ ┃ ┃ ┣ 📜VideoAdjustmentController.java
+ ┃ ┃ ┣ 📜VideoController.java
+ ┃ ┃ ┗ 📜VideoViewController.java
+ ┃ ┣ 📂dto
+ ┃ ┃ ┣ 📂request
+ ┃ ┃ ┃ ┣ 📜VideoAdjustmentRequestDto.java
+ ┃ ┃ ┃ ┣ 📜VideoRequestDto.java
+ ┃ ┃ ┃ ┗ 📜VideoViewRequestDto.java
+ ┃ ┃ ┗ 📂response
+ ┃ ┃ ┃ ┣ 📜VideoAdjustmentResponseDto.java
+ ┃ ┃ ┃ ┣ 📜VideoResponseDto.java
+ ┃ ┃ ┃ ┗ 📜VideoViewResponseDto.java
+ ┃ ┣ 📂entity
+ ┃ ┃ ┣ 📜Video.java
+ ┃ ┃ ┣ 📜VideoAdjustment.java
+ ┃ ┃ ┣ 📜VideoStatistics.java
+ ┃ ┃ ┗ 📜VideoView.java
+ ┃ ┣ 📂repository
+ ┃ ┃ ┣ 📂read
+ ┃ ┃ ┃ ┣ 📜VideoAdjustmentReadRepository.java
+ ┃ ┃ ┃ ┣ 📜VideoReadRepository.java
+ ┃ ┃ ┃ ┗ 📜VideoViewReadRepository.java
+ ┃ ┃ ┗ 📂write
+ ┃ ┃ ┃ ┣ 📜VideoAdjustmentWriteRepository.java
+ ┃ ┃ ┃ ┣ 📜VideoViewWriteRepository.java
+ ┃ ┃ ┃ ┗ 📜VideoWriteRepository.java
+ ┃ ┗ 📂service
+ ┃ ┃ ┣ 📜VideoAdjustmentService.java
+ ┃ ┃ ┣ 📜VideoService.java
+ ┃ ┃ ┗ 📜VideoViewService.java
+ ┗ 📜SettlementApplication.java
+```
+
+## 🫧 주요 기능
+1. 통계 및 정산 기능
+    - Chunk Oriented Processing으로 배치 작업 수행
+2. 부하 분산
+    - master/slave 구조로 가용성 DB 구축
+    - CQRS 패턴 적용
+3. 관련 API [문서](https://available-snow-c33.notion.site/API-30c1782c32364730b292483c0f49de61?pvs=4)
