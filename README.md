@@ -20,23 +20,26 @@
 - Docker
 - Github Actions
 
-## ⚙️ 아키텍처
+## ⚙️ 아키텍처 & ERD
 
-> 이미지 추가 예정
+> 아키텍처 이미지 추가 예정
 
+> ERD 이미지 추가 예정
 
 ## 🫧 주요 기능
 1. 통계 및 정산 기능
-    - Chunk Oriented Processing으로 배치 작업 수행 [문서]()
+   - 5천만 건의 데이터 처리
+   - Chunk Oriented Processing으로 배치 작업 수행 [문서]()
 2. 부하 분산
-    - master/slave 구조로 가용성 DB 구축
-    - CQRS 패턴 적용
+   - master/slave 구조로 가용성 DB 구축
+   - CQRS 패턴 적용
 3. Multi Thread 기반 Spring Batch 구현
-    - 병렬로 batch 작업 처리
-4. 관련 API [문서](https://available-snow-c33.notion.site/API-30c1782c32364730b292483c0f49de61?pvs=4)
+   - 병렬로 batch 작업 처리
+4. 관련 API [문서](https://documenter.getpostman.com/view/20895656/2sA3kUGMoF)
 
 
 ## ⛳️ 트러블 슈팅
 1. DB Replication 실패 에러 [문서](https://available-snow-c33.notion.site/DB-Replication-87602359eb354f3da44566850334b608)
 2. LazyInitializationException 에러 [문서](https://available-snow-c33.notion.site/LazyInitializationException-df2c6e0900ec4e5dba4d905c967d91c2)
 3. Bean 객체 충돌 에러 [문서](https://available-snow-c33.notion.site/Bean-fc722a99867b48238fda8894664512e0?pvs=25)
+4. 로컬 DB 인스턴스 우선 참조 [문서](https://happygimy97.tistory.com/228)
