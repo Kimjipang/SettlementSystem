@@ -18,7 +18,7 @@
 
 > 아키텍처 이미지 추가 예정
 
-<img src="https://github.com/user-attachments/assets/445a5e4d-278a-4e29-82fd-afd74ae863c6" width="500" align="center"/>
+<img src="https://github.com/user-attachments/assets/445a5e4d-278a-4e29-82fd-afd74ae863c6" width="500"/>
 
 
 ## 🫧 주요 기능
