@@ -13,18 +13,13 @@
 <img src="https://img.shields.io/badge/Docker-2496ED?style=for-the-badge&logo=Docker&logoColor=white"><img src="https://img.shields.io/badge/Github Actions-2088FF?style=for-the-badge&logo=Github Actions&logoColor=white"><img src="https://img.shields.io/badge/AWS EC2-FF9900?style=for-the-badge&logo=Spring Boot&logoColor=white"><img src="https://img.shields.io/badge/AWS Route 53-8C4FFF?style=for-the-badge&logo=Spring Boot&logoColor=white">
 
 
-#### 🧑‍💻 기술적 의사결정 [문서](https://available-snow-c33.notion.site/262cb2b4de4e4b269c862f2a5a17a347)
-
-- Spring Batch
-- MySQL
-- Docker
-- Github Actions
 
 ## ⚙️ 아키텍처 & ERD
 
 > 아키텍처 이미지 추가 예정
 
-> ERD 이미지 추가 예정
+<img src="https://github.com/user-attachments/assets/445a5e4d-278a-4e29-82fd-afd74ae863c6" width="500"/>
+
 
 ## 🫧 주요 기능
 1. 통계 및 정산 기능
