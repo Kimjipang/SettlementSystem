@@ -22,8 +22,7 @@
 
 
 ## 🫧 주요 기능
-1. 통계 및 정산 기능
-   - 5천만 건의 데이터 처리
+1. Spring batch를 활용한 통계 및 정산 기능 [문서](https://happygimy97.tistory.com/224)
    - Chunk Oriented Processing으로 배치 작업 수행 [문서]()
 2. 부하 분산
    - master/slave 구조로 가용성 DB 구축
@@ -37,4 +36,4 @@
 1. DB Replication 실패 에러 [문서](https://available-snow-c33.notion.site/DB-Replication-87602359eb354f3da44566850334b608)
 2. LazyInitializationException 에러 [문서](https://available-snow-c33.notion.site/LazyInitializationException-df2c6e0900ec4e5dba4d905c967d91c2)
 3. Bean 객체 충돌 에러 [문서](https://available-snow-c33.notion.site/Bean-fc722a99867b48238fda8894664512e0?pvs=25)
-4. 로컬 DB 인스턴스 우선 참조 [문서](https://happygimy97.tistory.com/228)
+4. 로컬 DB 인스턴스 우선 참조 [문서](https://available-snow-c33.notion.site/DB-8e987b0c66764a1bb6f38756789edea8)
