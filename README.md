@@ -33,7 +33,7 @@
 
 
 ## ⛳️ 트러블 슈팅
-1. DB Replication 실패 에러 [문서](https://available-snow-c33.notion.site/DB-Replication-87602359eb354f3da44566850334b608)
-2. LazyInitializationException 에러 [문서](https://available-snow-c33.notion.site/LazyInitializationException-df2c6e0900ec4e5dba4d905c967d91c2)
-3. Bean 객체 충돌 에러 [문서](https://available-snow-c33.notion.site/Bean-fc722a99867b48238fda8894664512e0?pvs=25)
-4. 로컬 DB 인스턴스 우선 참조 [문서](https://available-snow-c33.notion.site/DB-8e987b0c66764a1bb6f38756789edea8)
+1. DB Replication 실패 문제 [문서](https://available-snow-c33.notion.site/DB-Replication-87602359eb354f3da44566850334b608)
+2. LazyInitializationException 문제 [문서](https://available-snow-c33.notion.site/LazyInitializationException-df2c6e0900ec4e5dba4d905c967d91c2)
+3. Bean 객체 충돌 문제 [문서](https://available-snow-c33.notion.site/Bean-fc722a99867b48238fda8894664512e0?pvs=25)
+4. 로컬 DB 인스턴스 우선 참조 문제 [문서](https://available-snow-c33.notion.site/DB-8e987b0c66764a1bb6f38756789edea8)
