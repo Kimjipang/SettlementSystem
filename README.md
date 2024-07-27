@@ -23,35 +23,44 @@
 ## 💥 프로젝트 주요 경험
 
 <h2 align="center">1. 배치 작업 성능 개선 </h2>
+Spring batch를 활용한 통계 및 정산 기능 [문서](https://happygimy97.tistory.com/224)
 
-
+Chunk Oriented Processing으로 배치 작업 수행 [문서]()
 <h2 align="center">2. 부하 분산 </h2>
 
-## ⚙️ 아키텍처 & ERD
-<details>
-<summary>아키텍처</summary>
-> 아키텍처 이미지 추가 예정
-</details>
+### CQRS 패턴 적용
+- 쓰기 DB와 읽기 DB 책임의 분리
+- Slave DB를 통한 읽기 작업 부하 분산 및 가용성 향상
 
-<details>
-<summary>ERD</summary>
-<img src="https://github.com/user-attachments/assets/445a5e4d-278a-4e29-82fd-afd74ae863c6" width="900"/>
-</details>
+### DB Master-Slave 구조
+| **구분** | **역할** | **특징**     |
+| ----- | ------|------------|
+| **Master DB** | 쓰기 작업 담당 | 데이터 일관성 보장 |
+| **Slave DB** | 읽기 작업 담당 | 조회 성능 최적화 |
 
+<h2 align="center">3. 대용량 데이터 삽입 속도 개선 (기존 대비 약 70% 향상)</h2>
 
-## 🫧 주요 기능
-1. Spring batch를 활용한 통계 및 정산 기능 [문서](https://happygimy97.tistory.com/224)
-   - Chunk Oriented Processing으로 배치 작업 수행 [문서]()
-2. 부하 분산
-   - master/slave 구조로 가용성 DB 구축
-   - CQRS 패턴 적용
-3. Multi Thread 기반 Spring Batch 구현
-   - 병렬로 batch 작업 처리
-4. 관련 API [문서](https://documenter.getpostman.com/view/20895656/2sA3kUGMoF)
+| **단계**   | **데이터 규모** | **소요 시간** | **개선율** |
+|----------| ------ | -----| -----|
+| **개선 전** | 5천만 건 | 약 25분 14초 | 0% |
+| **개선 후** | 5천만 건 | 약 7분 18초 | + 70% |
 
 
 ## ⛳️ 트러블 슈팅
 1. DB Replication 실패 문제 [문서](https://available-snow-c33.notion.site/DB-Replication-87602359eb354f3da44566850334b608)
-2. LazyInitializationException 문제 [문서](https://available-snow-c33.notion.site/LazyInitializationException-df2c6e0900ec4e5dba4d905c967d91c2)
-3. Bean 객체 충돌 문제 [문서](https://available-snow-c33.notion.site/Bean-fc722a99867b48238fda8894664512e0?pvs=25)
+2. 5,000만 개의 더미 데이터 삽입 속도 70% 개선 [문서](https://www.notion.so/5-000-70-c074b54cdab64f008188a898e9969126)
+3. LazyInitializationException 문제 [문서](https://available-snow-c33.notion.site/LazyInitializationException-df2c6e0900ec4e5dba4d905c967d91c2)
 4. 로컬 DB 인스턴스 우선 참조 문제 [문서](https://available-snow-c33.notion.site/DB-8e987b0c66764a1bb6f38756789edea8)
+
+## ⚙️ 아키텍처
+
+> 아키텍처 이미지 추가 예정
+
+## 📙 ERD
+<img src="https://github.com/user-attachments/assets/445a5e4d-278a-4e29-82fd-afd74ae863c6" width="900"/>
+
+
+## 📜 API 문서
+<a href="https://documenter.getpostman.com/view/20895656/2sA3kUGMoF">
+  <img src="https://img.shields.io/badge/Postman-41454A?style=for-the-badge&logo=Postman&" alt="Postman API Documentation"><img src="https://img.shields.io/badge/API Documentation-FF6C37?style=for-the-badge&l&logoColor=white" alt="Postman API Documentation">
+</a>
