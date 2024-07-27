@@ -25,7 +25,10 @@
 <h2 align="center">1. 배치 작업 성능 개선 </h2>
 Spring batch를 활용한 통계 및 정산 기능 [문서](https://happygimy97.tistory.com/224)
 
+
 Chunk Oriented Processing으로 배치 작업 수행 [문서]()
+
+
 <h2 align="center">2. 부하 분산 </h2>
 
 ### CQRS 패턴 적용
