@@ -23,11 +23,8 @@
 ## 💥 프로젝트 주요 경험
 
 <h2 align="center">1. 배치 작업 성능 개선 </h2>
-Spring batch를 활용한 통계 및 정산 기능 [문서](https://happygimy97.tistory.com/224)
 
-
-Chunk Oriented Processing으로 배치 작업 수행 [문서]()
-
+<img src="https://github.com/user-attachments/assets/a1d07f0d-f362-4343-8bc2-a45ea40534f0" width="600" height="400">
 
 <h2 align="center">2. 부하 분산 </h2>
 
