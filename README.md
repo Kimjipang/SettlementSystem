@@ -23,7 +23,7 @@
 ## 💥 프로젝트 주요 경험
 
 <h2 align="center">1. 배치 작업 성능 개선 </h2>
-
+### 성능 개선 일지  [문서](https://www.naver.com)
 <img src="https://github.com/user-attachments/assets/46f95a0d-27ba-4c89-a66d-c7f90f1a60ca" width="600" height="400">
 
 <h2 align="center">2. 부하 분산 </h2>
@@ -70,5 +70,5 @@
 
 ## 📜 API 문서
 <a href="https://documenter.getpostman.com/view/20895656/2sA3kUGMoF">
-  <img src="https://img.shields.io/badge/Postman-41454A?style=for-the-badge&logo=Postman&" alt="Postman API Documentation"><img src="https://img.shields.io/badge/API Documentation-FF6C37?style=for-the-badge&l&logoColor=white" alt="Postman API Documentation">
+  <img src="https://img.shields.io/badge/Postman-41454A?style=for-the-badge&logo=Postman&" alt="Postman API Documentation" height="20"><img src="https://img.shields.io/badge/API Documentation-FF6C37?style=for-the-badge&l&logoColor=white" alt="Postman API Documentation" height="20">
 </a>
