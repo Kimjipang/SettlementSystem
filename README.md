@@ -58,7 +58,7 @@
 
 ## ⚙️ 아키텍처
 
-> 아키텍처 이미지 추가 예정
+<img src="https://github.com/user-attachments/assets/e2cbb166-8549-4ef1-9807-ff88c5e4a1c9">
 
 ## 📙 ERD
 <img src="https://github.com/user-attachments/assets/445a5e4d-278a-4e29-82fd-afd74ae863c6" width="900"/>
