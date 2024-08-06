@@ -6,7 +6,6 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.context.annotation.Primary;
 import org.springframework.data.jpa.repository.config.EnableJpaRepositories;
 import org.springframework.orm.jpa.JpaTransactionManager;
 import org.springframework.orm.jpa.LocalContainerEntityManagerFactoryBean;
@@ -25,16 +24,15 @@ import java.util.HashMap;
         entityManagerFactoryRef = "readEntityManagerFactory",
         transactionManagerRef = "readTransactionManager"
 )
-@EntityScan(
-        basePackages = {
-                "com.example.settlement.advertisement.entity",
-                "com.example.settlement.user.entity",
-                "com.example.settlement.video.entity"
-        }
-)
+//@EntityScan(
+//        basePackages = {
+//                "com.example.settlement.advertisement.entity",
+//                "com.example.settlement.user.entity",
+//                "com.example.settlement.video.entity"
+//        }
+//)
 public class ReadEntityManagerConfig {
 
-    @Primary
     @Bean
     public LocalContainerEntityManagerFactoryBean readEntityManagerFactory(@Qualifier("readDataSource") DataSource readDataSource) {
         LocalContainerEntityManagerFactoryBean em = new LocalContainerEntityManagerFactoryBean();
@@ -54,7 +52,6 @@ public class ReadEntityManagerConfig {
         return em;
     }
 
-    @Primary
     @Bean
     public JpaTransactionManager readTransactionManager(
             @Qualifier("readEntityManagerFactory") EntityManagerFactory EntityManagerFactory

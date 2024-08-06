@@ -2,7 +2,6 @@ package com.example.settlement.config;
 
 import jakarta.persistence.EntityManagerFactory;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.boot.autoconfigure.domain.EntityScan;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
@@ -24,13 +23,13 @@ import java.util.HashMap;
         entityManagerFactoryRef = "writeEntityManagerFactory",
         transactionManagerRef = "writeTransactionManager"
 )
-@EntityScan(
-        basePackages = {
-                "com.example.settlement.advertisement.entity",
-                "com.example.settlement.user.entity",
-                "com.example.settlement.video.entity"
-        }
-)
+//@EntityScan(
+//        basePackages = {
+//                "com.example.settlement.advertisement.entity",
+//                "com.example.settlement.user.entity",
+//                "com.example.settlement.video.entity"
+//        }
+//)
 public class WriteEntityManagerConfig {
 
     @Primary
